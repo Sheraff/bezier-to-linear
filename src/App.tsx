@@ -622,7 +622,6 @@ function App() {
   const animationCss = createMemo(
     () => `animation-timing-function: ${linearCss()};`,
   )
-  const selectedMarker = createMemo(() => pointOnSegment(curve(), selectedSegment(), 0.5))
   const previewProgress = createMemo(() => {
     const totalDuration = duration() * 2 + PREVIEW_HOLD * 2
     const elapsed = clock() % totalDuration
@@ -1069,7 +1068,6 @@ function App() {
               <path class="curve-path" d={exactPath()} />
               <path class="selected-path-glow" d={selectedPath()} filter="url(#curve-glow)" />
               <path class="selected-path" d={selectedPath()} />
-              <circle class="selected-marker" cx={xToSvg(selectedMarker().x)} cy={yToSvg(selectedMarker().y)} r="6" />
 
               <For each={curve().segments}>
                 {(segment, index) => {
@@ -1092,19 +1090,21 @@ function App() {
                         y1={yToSvg(nextAnchor().y)}
                         y2={yToSvg(segment.cp2.y)}
                       />
-                      <circle
+                      <rect
                         class={`control-point ${selectedSegment() === index() ? 'is-active' : ''} ${shiftHeld() ? 'is-mirror-armed' : ''}`}
-                        cx={xToSvg(segment.cp1.x)}
-                        cy={yToSvg(segment.cp1.y)}
+                        height="12"
                         onPointerDown={(event) => startDrag({ kind: 'cp1', index: index() }, event)}
-                        r="10"
+                        width="12"
+                        x={xToSvg(segment.cp1.x) - 6}
+                        y={yToSvg(segment.cp1.y) - 6}
                       />
-                      <circle
+                      <rect
                         class={`control-point ${selectedSegment() === index() ? 'is-active' : ''} ${shiftHeld() ? 'is-mirror-armed' : ''}`}
-                        cx={xToSvg(segment.cp2.x)}
-                        cy={yToSvg(segment.cp2.y)}
+                        height="12"
                         onPointerDown={(event) => startDrag({ kind: 'cp2', index: index() }, event)}
-                        r="10"
+                        width="12"
+                        x={xToSvg(segment.cp2.x) - 6}
+                        y={yToSvg(segment.cp2.y) - 6}
                       />
                     </>
                   )
@@ -1119,7 +1119,7 @@ function App() {
                       cx={xToSvg(anchor.x)}
                       cy={yToSvg(anchor.y)}
                       onPointerDown={(event) => startDrag({ kind: 'anchor', index: index() }, event)}
-                      r={index() === 0 || index() === curve().anchors.length - 1 ? '11' : '12'}
+                      r={index() === 0 || index() === curve().anchors.length - 1 ? '8' : '9'}
                     />
                   </>
                 )}

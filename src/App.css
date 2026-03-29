@@ -268,13 +268,6 @@
   stroke-dasharray: 10 10;
 }
 
-.selected-marker {
-  fill: rgba(198, 239, 255, 0.92);
-  stroke: rgba(103, 193, 255, 0.45);
-  stroke-width: 3;
-  pointer-events: none;
-}
-
 .anchor-point,
 .control-point {
   cursor: grab;
@@ -288,7 +281,7 @@
 .anchor-point {
   fill: #08080d;
   stroke: #f8fafc;
-  stroke-width: 3;
+  stroke-width: 2.5;
 }
 
 .anchor-point.is-locked {
@@ -298,7 +291,7 @@
 .control-point {
   fill: rgba(56, 189, 248, 0.22);
   stroke: #7dd3fc;
-  stroke-width: 3;
+  stroke-width: 2.5;
 }
 
 .control-point.is-active {
