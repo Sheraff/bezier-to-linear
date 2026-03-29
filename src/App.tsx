@@ -841,7 +841,7 @@ function App() {
   const deleteSegment = () => {
     commitEditorState({
       curve: removeSegment(curve(), selectedSegment()),
-      selectedSegment: Math.max(0, selectedSegment() - 1),
+      selectedSegment: Math.min(selectedSegment(), curve().segments.length - 2),
     })
   }
 
