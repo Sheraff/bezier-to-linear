@@ -144,7 +144,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
     },
   },
   {
-    label: 'Tactile',
+    label: 'MX Brown',
     curve: {
       anchors: [
         point(0, 0), point(0.0136, 0.1112), point(0.0346, 0.2222),
@@ -166,7 +166,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
     },
   },
   {
-    label: 'Clicky',
+    label: 'MX Blue',
     curve: {
       anchors: [
         point(0, 0), point(0.0128, 0.1112), point(0.0372, 0.2222),
@@ -188,7 +188,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
     },
   },
   {
-    label: 'Jade',
+    label: 'Box Jade',
     curve: {
       anchors: [
         point(0, 0), point(0.0072, 0.1112), point(0.0212, 0.2222),
@@ -210,7 +210,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
     },
   },
   {
-    label: 'Panda',
+    label: 'Holy Panda',
     curve: {
       anchors: [
         point(0, 0), point(0.0104, 0.1112), point(0.0353, 0.2222),
@@ -250,6 +250,168 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
         { cp1: point(0.9788, 0.7059), cp2: point(0.981, 0.7429) },
         { cp1: point(0.9859, 0.8174), cp2: point(0.9885, 0.8543) },
         { cp1: point(0.994, 0.9286), cp2: point(0.997, 0.9655) },
+      ],
+    },
+  },
+  {
+    label: 'Buckling Spring',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0103, 0.1112), point(0.0288, 0.2222),
+        point(0.0697, 0.3333), point(0.2203, 0.4445), point(0.754, 0.5555),
+        point(0.7673, 0.6667), point(0.7934, 0.7778), point(0.8721, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0034, 0.0466), cp2: point(0.0069, 0.0823) },
+        { cp1: point(0.0165, 0.1607), cp2: point(0.0226, 0.1955) },
+        { cp1: point(0.0424, 0.2778), cp2: point(0.0561, 0.3104) },
+        { cp1: point(0.1199, 0.4057), cp2: point(0.1701, 0.4292) },
+        { cp1: point(0.3982, 0.4821), cp2: point(0.5761, 0.4841) },
+        { cp1: point(0.7584, 0.5959), cp2: point(0.7629, 0.6374) },
+        { cp1: point(0.776, 0.7204), cp2: point(0.7847, 0.7538) },
+        { cp1: point(0.8197, 0.8423), cp2: point(0.8459, 0.8694) },
+        { cp1: point(0.9147, 0.9259), cp2: point(0.9574, 0.9629) },
+      ],
+    },
+  },
+  {
+    label: 'Alps Orange',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0071, 0.1112), point(0.0214, 0.2222),
+        point(0.1501, 0.3333), point(0.8712, 0.4445), point(0.9559, 0.5555),
+        point(0.9709, 0.6667), point(0.9806, 0.7778), point(0.99, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0024, 0.0425), cp2: point(0.0047, 0.0798) },
+        { cp1: point(0.0119, 0.1705), cp2: point(0.0166, 0.2023) },
+        { cp1: point(0.0643, 0.3249), cp2: point(0.1072, 0.3236) },
+        { cp1: point(0.3905, 0.3714), cp2: point(0.6308, 0.389) },
+        { cp1: point(0.8994, 0.4551), cp2: point(0.9277, 0.4632) },
+        { cp1: point(0.9609, 0.5792), cp2: point(0.9659, 0.6145) },
+        { cp1: point(0.9742, 0.7011), cp2: point(0.9774, 0.7388) },
+        { cp1: point(0.9838, 0.8155), cp2: point(0.9869, 0.8526) },
+        { cp1: point(0.9934, 0.9271), cp2: point(0.9967, 0.9641) },
+      ],
+    },
+  },
+  {
+    label: 'Toggle Switch',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0047, 0.1112), point(0.0094, 0.2222),
+        point(0.0151, 0.3333), point(0.0503, 0.4445), point(0.9468, 0.5555),
+        point(0.982, 0.6667), point(0.9877, 0.7778), point(0.9929, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0016, 0.0371), cp2: point(0.0031, 0.0741) },
+        { cp1: point(0.0062, 0.1486), cp2: point(0.0078, 0.1858) },
+        { cp1: point(0.0113, 0.2672), cp2: point(0.0132, 0.3051) },
+        { cp1: point(0.0268, 0.4416), cp2: point(0.0386, 0.4369) },
+        { cp1: point(0.3491, 0.4994), cp2: point(0.648, 0.5006) },
+        { cp1: point(0.9585, 0.5631), cp2: point(0.9703, 0.5584) },
+        { cp1: point(0.9839, 0.6949), cp2: point(0.9858, 0.7328) },
+        { cp1: point(0.9895, 0.819), cp2: point(0.9912, 0.8563) },
+        { cp1: point(0.9953, 0.9323), cp2: point(0.9976, 0.9687) },
+      ],
+    },
+  },
+  {
+    label: 'Bow Release',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.48, -0.18), point(0.58, -0.18),
+        point(0.68, 1.1), point(0.82, 0.96), point(0.92, 1.02),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.24, 0), cp2: point(0.42, -0.18) },
+        { cp1: point(0.52, -0.18), cp2: point(0.55, -0.18) },
+        { cp1: point(0.6, -0.18), cp2: point(0.64, 1.1) },
+        { cp1: point(0.72, 1.1), cp2: point(0.78, 0.96) },
+        { cp1: point(0.85, 0.96), cp2: point(0.89, 1.02) },
+        { cp1: point(0.95, 1.02), cp2: point(0.98, 1) },
+      ],
+    },
+  },
+  {
+    label: 'Pen Click',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.3, 0.35), point(0.38, 0.92),
+        point(0.48, 1.05), point(0.58, 0.97), point(0.72, 1.01),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.12, 0.22), cp2: point(0.24, 0.35) },
+        { cp1: point(0.32, 0.4), cp2: point(0.35, 0.92) },
+        { cp1: point(0.41, 0.92), cp2: point(0.45, 1.05) },
+        { cp1: point(0.51, 1.05), cp2: point(0.55, 0.97) },
+        { cp1: point(0.62, 0.97), cp2: point(0.68, 1.01) },
+        { cp1: point(0.78, 1.01), cp2: point(0.88, 1) },
+      ],
+    },
+  },
+  {
+    label: 'Ratchet',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0064, 0.0477), point(0.0238, 0.0952),
+        point(0.0936, 0.1428), point(0.1001, 0.1905), point(0.1186, 0.2382),
+        point(0.1974, 0.2857), point(0.2042, 0.3333), point(0.2236, 0.381),
+        point(0.3138, 0.4285), point(0.3208, 0.4762), point(0.3413, 0.5238),
+        point(0.4477, 0.5715), point(0.4548, 0.619), point(0.4764, 0.6667),
+        point(0.6018, 0.7143), point(0.6092, 0.7618), point(0.632, 0.8095),
+        point(0.7826, 0.8572), point(0.7903, 0.9048), point(0.8144, 0.9523),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0021, 0.0201), cp2: point(0.0042, 0.0358) },
+        { cp1: point(0.0122, 0.0766), cp2: point(0.018, 0.0881) },
+        { cp1: point(0.0471, 0.1135), cp2: point(0.0703, 0.1149) },
+        { cp1: point(0.0957, 0.1629), cp2: point(0.0979, 0.1787) },
+        { cp1: point(0.1063, 0.2199), cp2: point(0.1124, 0.2313) },
+        { cp1: point(0.1449, 0.2568), cp2: point(0.1711, 0.2584) },
+        { cp1: point(0.1997, 0.3058), cp2: point(0.2019, 0.3216) },
+        { cp1: point(0.2106, 0.3631), cp2: point(0.2171, 0.3742) },
+        { cp1: point(0.2537, 0.4002), cp2: point(0.2837, 0.402) },
+        { cp1: point(0.3161, 0.4487), cp2: point(0.3185, 0.4644) },
+        { cp1: point(0.3276, 0.5063), cp2: point(0.3344, 0.5172) },
+        { cp1: point(0.3767, 0.5438), cp2: point(0.4122, 0.546) },
+        { cp1: point(0.45, 0.5917), cp2: point(0.4524, 0.6074) },
+        { cp1: point(0.462, 0.6495), cp2: point(0.4692, 0.6602) },
+        { cp1: point(0.5182, 0.6874), cp2: point(0.56, 0.6897) },
+        { cp1: point(0.6042, 0.7346), cp2: point(0.6067, 0.7503) },
+        { cp1: point(0.6168, 0.7928), cp2: point(0.6244, 0.8032) },
+        { cp1: point(0.6822, 0.8311), cp2: point(0.7324, 0.8336) },
+        { cp1: point(0.7852, 0.8776), cp2: point(0.7877, 0.8933) },
+        { cp1: point(0.7983, 0.936), cp2: point(0.8063, 0.9462) },
+        { cp1: point(0.8763, 0.975), cp2: point(0.9381, 0.9776) },
+      ],
+    },
+  },
+  {
+    label: 'Stapler',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0078, 0.1112), point(0.0188, 0.2222),
+        point(0.0357, 0.3333), point(0.0643, 0.4445), point(0.1217, 0.5555),
+        point(0.2851, 0.6667), point(0.9791, 0.7778), point(0.989, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0026, 0.0431), cp2: point(0.0052, 0.0796) },
+        { cp1: point(0.0115, 0.1553), cp2: point(0.0151, 0.1915) },
+        { cp1: point(0.0245, 0.2679), cp2: point(0.0301, 0.3039) },
+        { cp1: point(0.0452, 0.3816), cp2: point(0.0548, 0.4169) },
+        { cp1: point(0.0834, 0.4972), cp2: point(0.1025, 0.5309) },
+        { cp1: point(0.1761, 0.619), cp2: point(0.2306, 0.6477) },
+        { cp1: point(0.5165, 0.726), cp2: point(0.7478, 0.7388) },
+        { cp1: point(0.9824, 0.802), cp2: point(0.9857, 0.8484) },
+        { cp1: point(0.9927, 0.9306), cp2: point(0.9963, 0.9674) },
       ],
     },
   },
