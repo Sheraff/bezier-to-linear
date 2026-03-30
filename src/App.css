@@ -108,6 +108,9 @@
 }
 
 .preset-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 8px 14px;
   border: none;
   background: none;
@@ -119,6 +122,20 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   transition: color 140ms ease, border-color 140ms ease;
+}
+
+.preset-tab-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.preset-tab-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .preset-tab:hover {
@@ -312,6 +329,26 @@
   padding: 12px 14px;
   border-radius: 16px;
   text-align: left;
+}
+
+.sampling-chip-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sampling-chip-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.sampling-chip-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .sampling-chip-label {
