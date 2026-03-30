@@ -208,7 +208,7 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
   },
   {
     label: 'Click',
-    category: 'standard',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.5996, 0.7013), point(0.792, 0.7988),
