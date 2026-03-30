@@ -415,6 +415,28 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
       ],
     },
   },
+  {
+    label: 'Magnetic Latch',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.1831, 0.1112), point(0.351, 0.2222),
+        point(0.5048, 0.3333), point(0.6444, 0.4445), point(0.7684, 0.5555),
+        point(0.8743, 0.6667), point(0.9546, 0.7778), point(0.9951, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.061, 0.0356), cp2: point(0.1221, 0.0726) },
+        { cp1: point(0.2391, 0.1467), cp2: point(0.295, 0.1836) },
+        { cp1: point(0.4023, 0.2576), cp2: point(0.4536, 0.2946) },
+        { cp1: point(0.5514, 0.3686), cp2: point(0.5979, 0.4056) },
+        { cp1: point(0.6857, 0.4793), cp2: point(0.7271, 0.5161) },
+        { cp1: point(0.8037, 0.5893), cp2: point(0.839, 0.6259) },
+        { cp1: point(0.9011, 0.6977), cp2: point(0.9278, 0.733) },
+        { cp1: point(0.9681, 0.8002), cp2: point(0.9816, 0.8261) },
+        { cp1: point(0.9967, 0.8973), cp2: point(0.9984, 0.8938) },
+      ],
+    },
+  },
 ]
 
 const PREVIEW_MODES: Array<{ id: PreviewMode; label: string }> = [
