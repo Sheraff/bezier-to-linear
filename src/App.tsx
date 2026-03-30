@@ -1,5 +1,6 @@
 import { createHotkeys, formatForDisplay } from '@tanstack/solid-hotkeys'
 import { For, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import type { JSX } from 'solid-js'
 import './App.css'
 import cherryLogo from './assets/Cherry.svg'
 import kailhLogo from './assets/Kailh.svg'
@@ -906,16 +907,100 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
   },
 ]
 
-const PREVIEW_MODES: Array<{ id: PreviewMode; label: string }> = [
-  { id: 'move-x', label: 'Move x' },
-  { id: 'move-y', label: 'Move y' },
-  { id: 'scale-x', label: 'Scale x' },
-  { id: 'scale-y', label: 'Scale y' },
-  { id: 'scale', label: 'Scale' },
-  { id: 'rotate-z', label: 'Rotate z 90deg' },
-  { id: 'opacity', label: 'Opacity' },
-  { id: 'rotate-x', label: 'Rotate x 180deg' },
-  { id: 'rotate-y', label: 'Rotate y 180deg' },
+const PREVIEW_MODES: Array<{ id: PreviewMode; label: string; icon: JSX.Element }> = [
+  {
+    id: 'move-x',
+    label: 'Move x',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 12h10m-3-3l3 3l-3 3M7 12a2 2 0 1 1-4 0a2 2 0 0 1 4 0" />
+      </svg>
+    ),
+  },
+  {
+    id: 'move-y',
+    label: 'Move y',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V3M9 6l3-3l3 3m-3 11a2 2 0 1 1 0 4a2 2 0 0 1 0-4" />
+      </svg>
+    ),
+  },
+  {
+    id: 'scale-x',
+    label: 'Scale x',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6m-10 6H3m18 0h-7m-8-3l-3 3l3 3m12-6l3 3l-3 3" />
+      </svg>
+    ),
+  },
+  {
+    id: 'scale-y',
+    label: 'Scale y',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6m6 10v7m0-18v7m-3 8l3 3l3-3M15 6l3-3l3 3" />
+      </svg>
+    ),
+  },
+  {
+    id: 'scale',
+    label: 'Scale',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+          <path d="M4 11v8a1 1 0 0 0 1 1h8M4 6V5a1 1 0 0 1 1-1h1m5 0h2m5 0h1a1 1 0 0 1 1 1v1m0 5v2m0 5v1a1 1 0 0 1-1 1h-1" />
+          <path d="M4 12h7a1 1 0 0 1 1 1v7" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'rotate-z',
+    label: 'Rotate z 90deg',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+          <path d="M19.95 11a8 8 0 1 0-.5 4m.5 5v-5h-5" />
+          <path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0-2 0" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'opacity',
+    label: 'Opacity',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M19 2a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3zm0 2H5a1 1 0 0 0-1 1v14a1 1 0 0 0 .769.973c3.499-.347 7.082-4.127 7.226-7.747L12 12c0-3.687 3.66-7.619 7.232-7.974A1 1 0 0 0 19 4" />
+      </svg>
+    ),
+  },
+  {
+    id: 'rotate-x',
+    label: 'Rotate x 180deg',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <g fill="none">
+          <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+          <path fill="currentColor" d="M12 2c.852 0 1.505.519 1.953 1.088c.458.581.826 1.36 1.117 2.232c.585 1.755.93 4.117.93 6.68s-.345 4.925-.93 6.68c-.29.873-.66 1.651-1.117 2.232c-.448.57-1.1 1.088-1.953 1.088c-1.197 0-2-.998-2.486-1.923c-.532-1.008-.933-2.373-1.189-3.914a1 1 0 0 1 1.974-.326c.235 1.422.589 2.558.984 3.308c.198.376.383.61.53.74c.194.17.334.07.469-.087l.1-.124c.26-.33.539-.87.79-1.626c.501-1.502.828-3.64.828-6.048s-.327-4.546-.827-6.048c-.252-.756-.53-1.296-.79-1.626l-.096-.116c-.145-.164-.296-.262-.497-.074c-.163.152-.363.422-.57.844a8.6 8.6 0 0 0-.522 1.387a1 1 0 0 1 .85 1.725l-.099.078l-1.617 1.132a.997.997 0 0 1-1.385-.186L7.271 7.433A1 1 0 0 1 8.704 6.07c.201-.742.443-1.41.721-1.974c.271-.55.6-1.048 1-1.422C10.831 2.294 11.363 2 12 2m1 9v2H5a1 1 0 0 1-.117-1.993L5 11zm6 0h-2v2h2a1 1 0 1 0 0-2" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'rotate-y',
+    label: 'Rotate y 180deg',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <g fill="none">
+          <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+          <path fill="currentColor" d="m7.433 7.271l1.58 1.106a1 1 0 0 1 .29 1.455L8.17 11.45a1 1 0 0 1-1.803-.75a8.6 8.6 0 0 0-1.387.52c-.422.208-.692.408-.844.571c-.188.201-.09.352.074.497l.116.095c.33.26.87.539 1.626.79C7.454 13.674 9.592 14 12 14s4.546-.327 6.048-.827c.756-.252 1.296-.53 1.626-.79l.124-.101c.157-.135.258-.275.088-.468c-.13-.148-.365-.333-.74-.53c-.751-.396-1.887-.75-3.31-.985a1 1 0 1 1 .327-1.974c1.541.256 2.906.657 3.914 1.189C21.002 10 22 10.803 22 12c0 .852-.519 1.505-1.088 1.953c-.581.458-1.36.826-2.232 1.117c-1.755.585-4.117.93-6.68.93s-4.925-.345-6.68-.93c-.873-.29-1.651-.66-2.232-1.117C2.518 13.505 2 12.853 2 12c0-.636.295-1.168.674-1.575c.374-.4.873-.729 1.422-1c.565-.278 1.232-.52 1.974-.72A1 1 0 0 1 7.433 7.27ZM12 4a1 1 0 0 1 1 1v8h-2V5a1 1 0 0 1 1-1m-1 15v-2h2v2a1 1 0 1 1-2 0" />
+        </g>
+      </svg>
+    ),
+  },
 ]
 
 const SAMPLING_MODES: Array<{ id: SamplingMode; label: string; note: string }> = [
@@ -2154,11 +2239,13 @@ function App() {
               <For each={PREVIEW_MODES}>
                 {(mode) => (
                   <button
+                    aria-label={mode.label}
                     class={`mode-chip ${previewMode() === mode.id ? 'is-active' : ''}`}
                     onClick={() => setPreviewMode(mode.id)}
+                    title={mode.label}
                     type="button"
                   >
-                    {mode.label}
+                    <span class="mode-chip-icon" aria-hidden="true">{mode.icon}</span>
                   </button>
                 )}
               </For>
