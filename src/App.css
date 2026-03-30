@@ -95,8 +95,45 @@
   letter-spacing: 0.16em;
 }
 
-.preset-row > span {
-  width: 100%;
+.preset-section {
+  margin-bottom: 14px;
+}
+
+.preset-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0;
+}
+
+.preset-tab {
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  color: rgba(220, 227, 255, 0.5);
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.preset-tab:hover {
+  color: rgba(220, 227, 255, 0.8);
+}
+
+.preset-tab.is-active {
+  color: #f7f8fe;
+  border-bottom-color: rgba(76, 201, 240, 0.72);
+}
+
+.preset-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .preset-chip {
@@ -118,6 +155,28 @@
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.preset-logo {
+  width: 32px;
+  height: 28px;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.5;
+  transition: opacity 140ms ease;
+  color: #f7f8fe;
+}
+
+.preset-logo.is-dark {
+  filter: brightness(0) invert(1);
+}
+
+.preset-chip:hover .preset-logo {
+  opacity: 0.8;
+}
+
+.preset-chip.is-active .preset-logo {
+  opacity: 0.9;
 }
 
 .preset-label {
@@ -148,6 +207,18 @@
 
 .preset-chip:hover .preset-icon path {
   stroke: rgba(125, 211, 252, 0.7);
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.editor-toolbar .modifier-bar {
+  margin-bottom: 0;
 }
 
 .segment-group {

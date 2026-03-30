@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" aria-label="Drop" color="#222222" class="Icon__color--black__lGnv2 " style="font-size:18px;line-height:1" version="1.1" id="svg1" viewBox="0 2 102 92">
+  <defs id="defs1"/>
+  <title id="title1">Drop</title>
+  <path d="M 101.999,48.026 C 102,89.683 55.505,94 55.505,94 L 29.726,68.373 47.016,68.313 C 72.83,68.314 71.923,48 71.923,48 c 0,0 0.908,-20.314 -24.905,-20.314 l -17.29,-0.06 V 68.373 L 0,38.822 V 2 H 47.036 C 47.036,2 102,1.993 102,47.996 v 0.03 z" fill-rule="evenodd" fill="currentColor" id="path1"/>
+  <metadata id="metadata1">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:title>Drop</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

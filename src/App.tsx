@@ -1,6 +1,12 @@
 import { createHotkeys, formatForDisplay } from '@tanstack/solid-hotkeys'
-import { For, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import { For, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import './App.css'
+import cherryLogo from './assets/Cherry.svg'
+import kailhLogo from './assets/Kailh.svg'
+import dropLogo from './assets/drop.svg'
+import topreLogo from './assets/Realforce.svg'
+import ibmLogo from './assets/IBM.svg'
+import alpsLogo from './assets/Alps.svg'
 
 type Point = {
   x: number
@@ -64,7 +70,7 @@ const PRESET_CATEGORY_LABELS: Record<PresetCategory, string> = {
 
 const PRESET_CATEGORIES: PresetCategory[] = ['standard', 'switches', 'devices', 'dualsense']
 
-const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; brand?: string }> = [
+const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; brand?: string; logo?: string; darkLogo?: boolean }> = [
   {
     label: 'Ease in',
     category: 'standard',
@@ -165,6 +171,7 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     label: 'MX Brown',
     category: 'switches',
     brand: 'Cherry',
+    logo: cherryLogo,
     curve: {
       anchors: [
         point(0, 0), point(0.0136, 0.1112), point(0.0346, 0.2222),
@@ -189,6 +196,7 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     label: 'MX Blue',
     category: 'switches',
     brand: 'Cherry',
+    logo: cherryLogo,
     curve: {
       anchors: [
         point(0, 0), point(0.0128, 0.1112), point(0.0372, 0.2222),
@@ -213,6 +221,7 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     label: 'Box Jade',
     category: 'switches',
     brand: 'Kailh',
+    logo: kailhLogo,
     curve: {
       anchors: [
         point(0, 0), point(0.0072, 0.1112), point(0.0212, 0.2222),
@@ -237,6 +246,8 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     label: 'Holy Panda',
     category: 'switches',
     brand: 'Drop',
+    logo: dropLogo,
+    darkLogo: true,
     curve: {
       anchors: [
         point(0, 0), point(0.0104, 0.1112), point(0.0353, 0.2222),
@@ -260,7 +271,8 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
   {
     label: 'Topre',
     category: 'switches',
-    brand: 'Topre',
+    brand: 'Realforce',
+    logo: topreLogo,
     curve: {
       anchors: [
         point(0, 0), point(0.0178, 0.1112), point(0.486, 0.2222),
@@ -285,6 +297,7 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     label: 'Buckling Spring',
     category: 'switches',
     brand: 'IBM',
+    logo: ibmLogo,
     curve: {
       anchors: [
         point(0, 0), point(0.0103, 0.1112), point(0.0288, 0.2222),
@@ -309,6 +322,8 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     label: 'Alps Orange',
     category: 'switches',
     brand: 'Alps',
+    logo: alpsLogo,
+    darkLogo: true,
     curve: {
       anchors: [
         point(0, 0), point(0.0071, 0.1112), point(0.0214, 0.2222),
@@ -700,7 +715,6 @@ const MIN_SMART_SAMPLE_ERROR = 0.000001
 const UNDO_HOTKEY_LABEL = formatForDisplay('Mod+Z')
 const REDO_HOTKEY_LABEL = formatForDisplay('Mod+Shift+Z')
 const COPY_HOTKEY_LABEL = formatForDisplay('Mod+C')
-const DELETE_HOTKEY_LABEL = formatForDisplay('Backspace')
 const SHIFT_LABEL = formatForDisplay('Shift')
 const MOD_CLICK_LABEL = `${formatForDisplay('Mod')}+Click`
 
@@ -824,8 +838,25 @@ const buildMiniCurvePath = (curve: Curve, width: number, height: number) => {
   const pad = 2
   const w = width - pad * 2
   const h = height - pad * 2
+
+  let yMin = 0
+  let yMax = 1
+
+  for (const anchor of curve.anchors) {
+    if (anchor.y < yMin) yMin = anchor.y
+    if (anchor.y > yMax) yMax = anchor.y
+  }
+
+  for (const segment of curve.segments) {
+    for (const cp of [segment.cp1, segment.cp2]) {
+      if (cp.y < yMin) yMin = cp.y
+      if (cp.y > yMax) yMax = cp.y
+    }
+  }
+
+  const yRange = yMax - yMin || 1
   const toX = (x: number) => pad + x * w
-  const toY = (y: number) => pad + (1 - clamp(y, -0.3, 1.3)) / 1.6 * h
+  const toY = (y: number) => pad + (yMax - y) / yRange * h
   const [first] = curve.anchors
 
   return curve.segments.reduce(
@@ -912,9 +943,6 @@ const splitSegmentAt = (curve: Curve, segmentIndex: number, splitT: number): Cur
 
   return normalizeCurve(nextCurve)
 }
-
-const splitSegment = (curve: Curve, segmentIndex: number): Curve =>
-  splitSegmentAt(curve, segmentIndex, 0.5)
 
 const findClosestTOnSegment = (curve: Curve, segmentIndex: number, target: Point) => {
   let bestT = 0.5
@@ -1356,6 +1384,11 @@ function App() {
   const [shiftHeld, setShiftHeld] = createSignal(false)
   const [modHeld, setModHeld] = createSignal(false)
   const [activePreset, setActivePreset] = createSignal<number | null>(initialCurve ? null : 5)
+  const [presetCategory, setPresetCategory] = createSignal<PresetCategory>('standard')
+  const filteredPresets = createMemo(() =>
+    PRESETS.map((preset, index) => ({ preset, index }))
+      .filter(({ preset }) => preset.category === presetCategory()),
+  )
 
   let svgRef: SVGSVGElement | undefined
   let copyResetTimer: number | undefined
@@ -1604,13 +1637,6 @@ function App() {
     }
   }
 
-  const addSegment = () => {
-    commitEditorState({
-      curve: splitSegment(curve(), selectedSegment()),
-      selectedSegment: selectedSegment(),
-    })
-  }
-
   const deleteSegment = () => {
     commitEditorState({
       curve: removeSegment(curve(), selectedSegment()),
@@ -1686,10 +1712,59 @@ function App() {
 
       <section class="workspace-grid">
         <section class="panel editor-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="panel-kicker">Curve</p>
-              <h2>Exact editor</h2>
+          <div class="preset-section">
+            <div class="preset-tabs">
+              <For each={PRESET_CATEGORIES}>
+                {(category) => (
+                  <button
+                    class={`preset-tab ${presetCategory() === category ? 'is-active' : ''}`}
+                    onClick={() => setPresetCategory(category)}
+                    type="button"
+                  >
+                    {PRESET_CATEGORY_LABELS[category]}
+                  </button>
+                )}
+              </For>
+            </div>
+            <div class="chip-group preset-group">
+              <For each={filteredPresets()}>
+                {({ preset, index }) => (
+                  <button
+                    class={`chip-button preset-chip ${activePreset() === index ? 'is-active' : ''}`}
+                    onClick={() => applyPreset(preset.curve, index)}
+                    type="button"
+                  >
+                    <Show when={preset.logo} fallback={
+                      <svg class="preset-icon" viewBox="0 0 32 24">
+                        <path d={buildMiniCurvePath(preset.curve, 32, 24)} />
+                      </svg>
+                    }>
+                      <img class={`preset-logo${preset.darkLogo ? ' is-dark' : ''}`} src={preset.logo} alt={preset.brand} />
+                    </Show>
+                    <span class="preset-label">
+                      {preset.label}
+                      {preset.brand && <span class="preset-brand">{preset.brand}</span>}
+                    </span>
+                  </button>
+                )}
+              </For>
+            </div>
+          </div>
+
+          <div class="editor-toolbar">
+            <div class="modifier-bar">
+              <div class={`modifier-pill ${shiftHeld() ? 'is-active' : ''}`}>
+                <span class="modifier-shortcut">{SHIFT_LABEL}+Drag</span>
+                <span>mirror handle</span>
+              </div>
+              <div class={`modifier-pill ${modHeld() ? 'is-active' : ''}`}>
+                <span class="modifier-shortcut">{MOD_CLICK_LABEL}</span>
+                <span>split at click</span>
+              </div>
+              <div class="modifier-pill">
+                <span class="modifier-shortcut">Click curve</span>
+                <span>select segment</span>
+              </div>
             </div>
             <div class="history-buttons">
               <button
@@ -1708,85 +1783,6 @@ function App() {
               >
                 Redo <span class="button-shortcut">{REDO_HOTKEY_LABEL}</span>
               </button>
-            </div>
-          </div>
-
-          <For each={PRESET_CATEGORIES}>
-            {(category) => (
-              <div class="control-row preset-row">
-                <span>{PRESET_CATEGORY_LABELS[category]}</span>
-                <div class="chip-group">
-                  <For each={PRESETS}>
-                    {(preset, index) =>
-                      preset.category === category ? (
-                        <button
-                          class={`chip-button preset-chip ${activePreset() === index() ? 'is-active' : ''}`}
-                          onClick={() => applyPreset(preset.curve, index())}
-                          type="button"
-                        >
-                          <svg class="preset-icon" viewBox="0 0 32 24">
-                            <path d={buildMiniCurvePath(preset.curve, 32, 24)} />
-                          </svg>
-                          <span class="preset-label">
-                            {preset.label}
-                            {preset.brand && <span class="preset-brand">{preset.brand}</span>}
-                          </span>
-                        </button>
-                      ) : null
-                    }
-                  </For>
-                </div>
-              </div>
-            )}
-          </For>
-
-          <div class="control-row">
-            <span>Segments</span>
-            <div class="chip-group segment-group">
-              <For each={curve().segments}>
-                {(_, index) => (
-                  <button
-                    class={`segment-chip ${selectedSegment() === index() ? 'is-active' : ''}`}
-                    onClick={() =>
-                      setEditorWithoutHistory({
-                        curve: curve(),
-                        selectedSegment: index(),
-                      })
-                    }
-                    type="button"
-                  >
-                    S{index() + 1}
-                  </button>
-                )}
-              </For>
-            </div>
-            <div class="action-buttons">
-              <button class="secondary-button" onClick={addSegment} type="button">
-                Split selected
-              </button>
-              <button
-                class="secondary-button"
-                disabled={!canDelete()}
-                onClick={deleteSegment}
-                type="button"
-              >
-                Remove selected <span class="button-shortcut">{DELETE_HOTKEY_LABEL}</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="modifier-bar">
-            <div class={`modifier-pill ${shiftHeld() ? 'is-active' : ''}`}>
-              <span class="modifier-shortcut">{SHIFT_LABEL}+Drag</span>
-              <span>mirror handle</span>
-            </div>
-            <div class={`modifier-pill ${modHeld() ? 'is-active' : ''}`}>
-              <span class="modifier-shortcut">{MOD_CLICK_LABEL}</span>
-              <span>split at click</span>
-            </div>
-            <div class="modifier-pill">
-              <span class="modifier-shortcut">Click curve</span>
-              <span>select segment</span>
             </div>
           </div>
 
