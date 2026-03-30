@@ -692,6 +692,26 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     },
   },
   {
+    label: 'Cork Pop',
+    category: 'devices',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.12, 0.02), point(0.28, 0.08),
+        point(0.44, 0.18), point(0.58, 0.34), point(0.68, 0.58),
+        point(0.74, 1.08), point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.04, 0.005), cp2: point(0.08, 0.01) },
+        { cp1: point(0.17, 0.03), cp2: point(0.23, 0.05) },
+        { cp1: point(0.33, 0.10), cp2: point(0.39, 0.13) },
+        { cp1: point(0.48, 0.22), cp2: point(0.53, 0.27) },
+        { cp1: point(0.62, 0.42), cp2: point(0.65, 0.50) },
+        { cp1: point(0.70, 0.70), cp2: point(0.72, 0.95) },
+        { cp1: point(0.78, 1.12), cp2: point(0.90, 1.02) },
+      ],
+    },
+  },
+  {
     label: 'Trigger Pull',
     category: 'dualsense',
     curve: {
