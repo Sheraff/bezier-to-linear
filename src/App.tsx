@@ -38,6 +38,8 @@ type PreviewMode =
   | 'rotate-x'
   | 'rotate-y'
 
+type SamplingMode = 'regular' | 'smart'
+
 const VIEWBOX_WIDTH = 1000
 const VIEWBOX_HEIGHT = 940
 const GRAPH_LEFT = 72
@@ -103,6 +105,15 @@ const PREVIEW_MODES: Array<{ id: PreviewMode; label: string }> = [
   { id: 'rotate-x', label: 'Rotate x 180deg' },
   { id: 'rotate-y', label: 'Rotate y 180deg' },
 ]
+
+const SAMPLING_MODES: Array<{ id: SamplingMode; label: string; note: string }> = [
+  { id: 'smart', label: 'smart sampling', note: 'Adds stops where the curve bends most' },
+  { id: 'regular', label: 'regular sampling', note: 'Spaces stops evenly across progress' },
+]
+
+const SMART_SAMPLE_RATIOS = [1 / 6, 1 / 3, 1 / 2, 2 / 3, 5 / 6]
+const MIN_LINEAR_STOP_GAP = 0.0001
+const MIN_SMART_SAMPLE_ERROR = 0.000001
 
 const UNDO_HOTKEY_LABEL = formatForDisplay('Mod+Z')
 const REDO_HOTKEY_LABEL = formatForDisplay('Mod+Shift+Z')
@@ -414,13 +425,102 @@ const curveValueAtX = (curve: Curve, x: number) => {
   return cubic(start.y, segment.cp1.y, segment.cp2.y, end.y, t)
 }
 
-const sampleLinearStops = (curve: Curve, stopCount: number) => {
+const sampleLinearStopsRegular = (curve: Curve, stopCount: number) => {
   const safeCount = Math.max(2, stopCount)
   return Array.from({ length: safeCount }, (_, index) => {
     const x = index / (safeCount - 1)
     return point(x, curveValueAtX(curve, x))
   })
 }
+
+const getSmartSplitPoint = (curve: Curve, start: Point, end: Point) => {
+  const span = end.x - start.x
+
+  if (span <= MIN_LINEAR_STOP_GAP * 2) {
+    return null
+  }
+
+  const candidateXs: number[] = []
+  const addCandidateX = (x: number) => {
+    if (x <= start.x + MIN_LINEAR_STOP_GAP || x >= end.x - MIN_LINEAR_STOP_GAP) {
+      return
+    }
+
+    if (candidateXs.some((candidateX) => Math.abs(candidateX - x) < MIN_LINEAR_STOP_GAP)) {
+      return
+    }
+
+    candidateXs.push(x)
+  }
+
+  SMART_SAMPLE_RATIOS.forEach((ratio) => addCandidateX(lerp(start.x, end.x, ratio)))
+  curve.anchors.forEach((anchor) => addCandidateX(anchor.x))
+
+  let bestPoint: Point | null = null
+  let bestError = -1
+
+  candidateXs.forEach((x) => {
+    const amount = (x - start.x) / span
+    const curveY = curveValueAtX(curve, x)
+    const linearY = lerp(start.y, end.y, amount)
+    const error = Math.abs(curveY - linearY)
+
+    if (error > bestError) {
+      bestPoint = point(x, curveY)
+      bestError = error
+    }
+  })
+
+  if (!bestPoint) {
+    return null
+  }
+
+  return {
+    point: bestPoint,
+    error: bestError,
+  }
+}
+
+const sampleLinearStopsSmart = (curve: Curve, stopCount: number) => {
+  const safeCount = Math.max(2, stopCount)
+  const points = [point(0, curveValueAtX(curve, 0)), point(1, curveValueAtX(curve, 1))]
+
+  // Spend the stop budget where the current piecewise-linear approximation misses most.
+  while (points.length < safeCount) {
+    let bestSplit:
+      | {
+          index: number
+          point: Point
+          error: number
+        }
+      | null = null
+
+    for (let index = 0; index < points.length - 1; index += 1) {
+      const split = getSmartSplitPoint(curve, points[index], points[index + 1])
+
+      if (!split) {
+        continue
+      }
+
+      if (!bestSplit || split.error > bestSplit.error) {
+        bestSplit = { index, ...split }
+      }
+    }
+
+    if (!bestSplit || bestSplit.error <= MIN_SMART_SAMPLE_ERROR) {
+      break
+    }
+
+    points.splice(bestSplit.index + 1, 0, bestSplit.point)
+  }
+
+  return points
+}
+
+const sampleLinearStops = (curve: Curve, stopCount: number, samplingMode: SamplingMode) =>
+  samplingMode === 'smart'
+    ? sampleLinearStopsSmart(curve, stopCount)
+    : sampleLinearStopsRegular(curve, stopCount)
 
 const evaluateLinearStops = (points: Point[], x: number) => {
   const clampedX = clamp(x, 0, 1)
@@ -591,6 +691,7 @@ function App() {
   const [past, setPast] = createSignal<EditorState[]>([])
   const [future, setFuture] = createSignal<EditorState[]>([])
   const [stopCount, setStopCount] = createSignal(24)
+  const [samplingMode, setSamplingMode] = createSignal<SamplingMode>('smart')
   const [duration, setDuration] = createSignal(1100)
   const [previewMode, setPreviewMode] = createSignal<PreviewMode>('move-x')
   const [copyLabel, setCopyLabel] = createSignal('Copy CSS')
@@ -613,7 +714,7 @@ function App() {
   const segmentPaths = createMemo(() =>
     curve().segments.map((_, index) => buildSegmentPath(curve(), index)),
   )
-  const linearStops = createMemo(() => sampleLinearStops(curve(), stopCount()))
+  const linearStops = createMemo(() => sampleLinearStops(curve(), stopCount(), samplingMode()))
   const linearPath = createMemo(() => buildLinePath(linearStops()))
   const linearCss = createMemo(() => formatLinearFunction(linearStops()))
   const transitionCss = createMemo(
@@ -1221,7 +1322,7 @@ function App() {
             </p>
           </section>
 
-        <section class="panel output-panel">
+          <section class="panel output-panel">
           <div class="panel-heading compact">
             <div>
               <p class="panel-kicker">Export</p>
@@ -1232,10 +1333,31 @@ function App() {
             </button>
           </div>
 
+          <div class="control-row">
+            <div class="chip-group sampling-group">
+              <For each={SAMPLING_MODES}>
+                {(mode) => (
+                  <button
+                    class={`segment-chip sampling-chip ${samplingMode() === mode.id ? 'is-active' : ''}`}
+                    onClick={() => setSamplingMode(mode.id)}
+                    type="button"
+                  >
+                    <span class="sampling-chip-label">{mode.label}</span>
+                    <span class="sampling-chip-note">{mode.note}</span>
+                  </button>
+                )}
+              </For>
+            </div>
+          </div>
+
           <label class="slider-block" for="stop-slider">
             <div class="slider-copy">
-              <span>Stops / accuracy</span>
-              <strong>{stopCount()}</strong>
+              <span>{samplingMode() === 'smart' ? 'Stops / max budget' : 'Stops / accuracy'}</span>
+              <strong>
+                {samplingMode() === 'smart' && linearStops().length !== stopCount()
+                  ? `${linearStops().length} / ${stopCount()}`
+                  : `${stopCount()}`}
+              </strong>
             </div>
             <input
               id="stop-slider"
