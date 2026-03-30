@@ -1,5 +1,5 @@
 import { createHotkeys, formatForDisplay } from '@tanstack/solid-hotkeys'
-import { For, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import { For, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import './App.css'
 
 type Point = {
@@ -55,40 +55,201 @@ const point = (x: number, y: number): Point => ({ x, y })
 
 const PRESETS: Array<{ label: string; curve: Curve }> = [
   {
-    label: 'Ease',
+    label: 'Ease in',
     curve: {
       anchors: [point(0, 0), point(1, 1)],
-      segments: [{ cp1: point(0.18, 0), cp2: point(0.72, 1) }],
+      segments: [{ cp1: point(0.5, 0), cp2: point(0.75, 0) }],
+    },
+  },
+  {
+    label: 'Ease out',
+    curve: {
+      anchors: [point(0, 0), point(1, 1)],
+      segments: [{ cp1: point(0.25, 1), cp2: point(0.5, 1) }],
+    },
+  },
+  {
+    label: 'Ease in-out',
+    curve: {
+      anchors: [point(0, 0), point(1, 1)],
+      segments: [{ cp1: point(0.44, 0), cp2: point(0.56, 1) }],
     },
   },
   {
     label: 'Overshoot',
     curve: {
-      anchors: [point(0, 0), point(0.55, 1.16), point(1, 1)],
+      anchors: [point(0, 0), point(0.48, 1.28), point(1, 1)],
       segments: [
-        { cp1: point(0.12, 0.02), cp2: point(0.32, 1.18) },
-        { cp1: point(0.72, 1.14), cp2: point(0.88, 0.98) },
+        { cp1: point(0.06, 0.72), cp2: point(0.30, 1.30) },
+        { cp1: point(0.64, 1.26), cp2: point(0.84, 1) },
       ],
     },
   },
   {
     label: 'Bounce',
     curve: {
-      anchors: [point(0, 0), point(0.46, 1.12), point(0.72, 0.86), point(1, 1)],
+      anchors: [
+        point(0, 0), point(0.35, 1), point(0.6517, 1),
+        point(0.8651, 1), point(1, 1),
+      ],
       segments: [
-        { cp1: point(0.14, 0), cp2: point(0.3, 1.2) },
-        { cp1: point(0.58, 1.08), cp2: point(0.64, 0.86) },
-        { cp1: point(0.82, 0.86), cp2: point(0.92, 1.02) },
+        { cp1: point(0.1167, 0), cp2: point(0.2333, 0.3333) },
+        { cp1: point(0.4753, 0.6981), cp2: point(0.5468, 0.7257) },
+        { cp1: point(0.7421, 0.8168), cp2: point(0.7687, 0.8196) },
+        { cp1: point(0.9088, 0.9216), cp2: point(0.958, 0.9089) },
       ],
     },
   },
   {
-    label: 'Anticipate',
+    label: 'Spring',
     curve: {
-      anchors: [point(0, 0), point(0.24, -0.18), point(1, 1)],
+      anchors: [
+        point(0, 0), point(0.079, 1.689), point(0.161, 0.5287),
+        point(0.2435, 1.3224), point(0.3255, 0.7795),
+        point(0.408, 1.1509), point(0.49, 0.8968),
+        point(0.572, 1.0706), point(0.6545, 0.9517),
+        point(0.7365, 1.033), point(0.819, 0.9774),
+        point(0.901, 1.0155), point(0.983, 0.9894), point(1, 1),
+      ],
       segments: [
-        { cp1: point(0.08, 0), cp2: point(0.18, -0.18) },
-        { cp1: point(0.4, -0.18), cp2: point(0.78, 1.08) },
+        { cp1: point(0.0239, 0.1067), cp2: point(0.0527, 1.7717) },
+        { cp1: point(0.1063, 1.6551), cp2: point(0.1337, 0.4859) },
+        { cp1: point(0.1868, 0.5461), cp2: point(0.2159, 1.3369) },
+        { cp1: point(0.2708, 1.2931), cp2: point(0.2982, 0.7795) },
+        { cp1: point(0.353, 0.7868), cp2: point(0.3805, 1.1509) },
+        { cp1: point(0.4353, 1.1509), cp2: point(0.4627, 0.8968) },
+        { cp1: point(0.5173, 0.8968), cp2: point(0.5447, 1.0706) },
+        { cp1: point(0.5995, 1.0706), cp2: point(0.627, 0.9517) },
+        { cp1: point(0.6818, 0.9517), cp2: point(0.7092, 1.033) },
+        { cp1: point(0.764, 1.033), cp2: point(0.7915, 0.9774) },
+        { cp1: point(0.8463, 0.9774), cp2: point(0.8737, 1.0155) },
+        { cp1: point(0.9283, 1.0155), cp2: point(0.9557, 0.9894) },
+        { cp1: point(0.9887, 0.9894), cp2: point(0.9943, 1) },
+      ],
+    },
+  },
+  {
+    label: 'Click',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.5996, 0.7013), point(0.792, 0.7988),
+        point(0.8785, 1.0521), point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.2402, 0.037), cp2: point(0.4232, 0.4647) },
+        { cp1: point(0.6722, 0.8006), cp2: point(0.6896, 0.7988) },
+        { cp1: point(0.812, 0.9388), cp2: point(0.8385, 1.0521) },
+        { cp1: point(0.9185, 1.0521), cp2: point(0.9543, 0.9008) },
+      ],
+    },
+  },
+  {
+    label: 'Tactile',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0136, 0.1112), point(0.0346, 0.2222),
+        point(0.0714, 0.3333), point(0.1493, 0.4445), point(0.2906, 0.5555),
+        point(0.3251, 0.6667), point(0.3682, 0.7778), point(0.4728, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0045, 0.0445), cp2: point(0.009, 0.0807) },
+        { cp1: point(0.0206, 0.1573), cp2: point(0.0276, 0.1931) },
+        { cp1: point(0.0469, 0.2712), cp2: point(0.0591, 0.3062) },
+        { cp1: point(0.0973, 0.3877), cp2: point(0.1233, 0.4208) },
+        { cp1: point(0.1964, 0.4807), cp2: point(0.2435, 0.5004) },
+        { cp1: point(0.3021, 0.5755), cp2: point(0.3136, 0.6145) },
+        { cp1: point(0.3395, 0.7176), cp2: point(0.3538, 0.752) },
+        { cp1: point(0.403, 0.8362), cp2: point(0.4379, 0.8675) },
+        { cp1: point(0.6486, 0.9732), cp2: point(0.8243, 0.9884) },
+      ],
+    },
+  },
+  {
+    label: 'Clicky',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0128, 0.1112), point(0.0372, 0.2222),
+        point(0.1006, 0.3333), point(0.5042, 0.4445), point(0.7659, 0.5555),
+        point(0.7817, 0.6667), point(0.8074, 0.7778), point(0.8584, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0043, 0.0477), cp2: point(0.0085, 0.0831) },
+        { cp1: point(0.0209, 0.1627), cp2: point(0.0291, 0.1968) },
+        { cp1: point(0.0584, 0.2825), cp2: point(0.0795, 0.3129) },
+        { cp1: point(0.2351, 0.4273), cp2: point(0.3697, 0.435) },
+        { cp1: point(0.5914, 0.4532), cp2: point(0.6787, 0.4093) },
+        { cp1: point(0.7712, 0.5965), cp2: point(0.7765, 0.6359) },
+        { cp1: point(0.7903, 0.7148), cp2: point(0.7989, 0.7501) },
+        { cp1: point(0.8244, 0.8302), cp2: point(0.8414, 0.864) },
+        { cp1: point(0.9056, 0.9514), cp2: point(0.9528, 0.9807) },
+      ],
+    },
+  },
+  {
+    label: 'Jade',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0072, 0.1112), point(0.0212, 0.2222),
+        point(0.059, 0.3333), point(0.3498, 0.4445), point(0.5187, 0.5555),
+        point(0.5285, 0.6667), point(0.5536, 0.7778), point(0.6943, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0024, 0.0479), cp2: point(0.0048, 0.0833) },
+        { cp1: point(0.0119, 0.1632), cp2: point(0.0166, 0.1971) },
+        { cp1: point(0.0338, 0.2837), cp2: point(0.0464, 0.3135) },
+        { cp1: point(0.1559, 0.4352), cp2: point(0.2529, 0.4363) },
+        { cp1: point(0.4061, 0.4568), cp2: point(0.4624, 0.4033) },
+        { cp1: point(0.5219, 0.607), cp2: point(0.5252, 0.6412) },
+        { cp1: point(0.5368, 0.7266), cp2: point(0.5452, 0.7572) },
+        { cp1: point(0.6005, 0.8643), cp2: point(0.6474, 0.8759) },
+        { cp1: point(0.7962, 0.9259), cp2: point(0.8981, 0.9629) },
+      ],
+    },
+  },
+  {
+    label: 'Panda',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0104, 0.1112), point(0.0353, 0.2222),
+        point(0.1513, 0.3333), point(0.6497, 0.4445), point(0.6721, 0.5555),
+        point(0.6962, 0.6667), point(0.7367, 0.7778), point(0.8166, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0035, 0.0506), cp2: point(0.0069, 0.0851) },
+        { cp1: point(0.0187, 0.1689), cp2: point(0.027, 0.2005) },
+        { cp1: point(0.0739, 0.3035), cp2: point(0.1126, 0.3209) },
+        { cp1: point(0.3174, 0.3663), cp2: point(0.4836, 0.3552) },
+        { cp1: point(0.6572, 0.4621), cp2: point(0.6647, 0.5034) },
+        { cp1: point(0.6802, 0.6011), cp2: point(0.6882, 0.6371) },
+        { cp1: point(0.7097, 0.7147), cp2: point(0.7232, 0.7501) },
+        { cp1: point(0.7634, 0.8301), cp2: point(0.79, 0.864) },
+        { cp1: point(0.8777, 0.9397), cp2: point(0.9389, 0.9701) },
+      ],
+    },
+  },
+  {
+    label: 'Topre',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.0178, 0.1112), point(0.486, 0.2222),
+        point(0.9408, 0.3333), point(0.9628, 0.4445), point(0.9703, 0.5555),
+        point(0.9765, 0.6667), point(0.9833, 0.7778), point(0.991, 0.8888),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0059, 0.0806), cp2: point(0.0119, 0.0986) },
+        { cp1: point(0.1739, 0.2214), cp2: point(0.33, 0.2101) },
+        { cp1: point(0.6376, 0.2339), cp2: point(0.7892, 0.2237) },
+        { cp1: point(0.9481, 0.3476), cp2: point(0.9555, 0.3709) },
+        { cp1: point(0.9653, 0.4737), cp2: point(0.9678, 0.5111) },
+        { cp1: point(0.9723, 0.5926), cp2: point(0.9744, 0.6301) },
+        { cp1: point(0.9788, 0.7059), cp2: point(0.981, 0.7429) },
+        { cp1: point(0.9859, 0.8174), cp2: point(0.9885, 0.8543) },
+        { cp1: point(0.994, 0.9286), cp2: point(0.997, 0.9655) },
       ],
     },
   },
@@ -118,6 +279,7 @@ const MIN_SMART_SAMPLE_ERROR = 0.000001
 const UNDO_HOTKEY_LABEL = formatForDisplay('Mod+Z')
 const REDO_HOTKEY_LABEL = formatForDisplay('Mod+Shift+Z')
 const COPY_HOTKEY_LABEL = formatForDisplay('Mod+C')
+const DELETE_HOTKEY_LABEL = formatForDisplay('Backspace')
 const SHIFT_LABEL = formatForDisplay('Shift')
 const MOD_CLICK_LABEL = `${formatForDisplay('Mod')}+Click`
 
@@ -275,6 +437,13 @@ const normalizeEditorState = (state: EditorState): EditorState => {
     curve,
     selectedSegment: clamp(state.selectedSegment, 0, curve.segments.length - 1),
   }
+}
+
+const NORMALIZED_PRESET_JSONS = PRESETS.map((p) => JSON.stringify(normalizeCurve(p.curve)))
+
+const findMatchingPreset = (c: Curve): number | null => {
+  const index = NORMALIZED_PRESET_JSONS.indexOf(JSON.stringify(c))
+  return index >= 0 ? index : null
 }
 
 const editorStatesEqual = (left: EditorState, right: EditorState) =>
@@ -544,6 +713,54 @@ const formatLinearFunction = (points: Point[]) =>
     .map((current) => `${formatNumber(current.y)} ${formatPercent(current.x)}`)
     .join(', ')})`
 
+const curveToHash = (curve: Curve): string => {
+  const numbers: number[] = [curve.anchors[0].x, curve.anchors[0].y]
+
+  for (let index = 0; index < curve.segments.length; index += 1) {
+    numbers.push(
+      curve.segments[index].cp1.x,
+      curve.segments[index].cp1.y,
+      curve.segments[index].cp2.x,
+      curve.segments[index].cp2.y,
+      curve.anchors[index + 1].x,
+      curve.anchors[index + 1].y,
+    )
+  }
+
+  return numbers.map((n) => formatNumber(n, 4)).join(',')
+}
+
+const hashToCurve = (hash: string): Curve | null => {
+  const raw = hash.replace(/^#/, '')
+
+  if (!raw) {
+    return null
+  }
+
+  const numbers = raw.split(',').map(Number)
+
+  if (numbers.some((n) => !Number.isFinite(n))) {
+    return null
+  }
+
+  if (numbers.length < 8 || (numbers.length - 2) % 6 !== 0) {
+    return null
+  }
+
+  const anchors: Point[] = [point(numbers[0], numbers[1])]
+  const segments: Segment[] = []
+
+  for (let index = 2; index < numbers.length; index += 6) {
+    segments.push({
+      cp1: point(numbers[index], numbers[index + 1]),
+      cp2: point(numbers[index + 2], numbers[index + 3]),
+    })
+    anchors.push(point(numbers[index + 4], numbers[index + 5]))
+  }
+
+  return { anchors, segments }
+}
+
 const clientPointToCurve = (
   clientX: number,
   clientY: number,
@@ -682,9 +899,11 @@ const getPreviewStyle = (mode: PreviewMode, value: number) => {
 }
 
 function App() {
+  const initialCurve = hashToCurve(window.location.hash)
+
   const [editorState, setEditorState] = createSignal<EditorState>(
     normalizeEditorState({
-      curve: cloneCurve(PRESETS[1].curve),
+      curve: initialCurve ? initialCurve : cloneCurve(PRESETS[5].curve),
       selectedSegment: 0,
     }),
   )
@@ -700,6 +919,7 @@ function App() {
   const [dragOrigin, setDragOrigin] = createSignal<EditorState | null>(null)
   const [shiftHeld, setShiftHeld] = createSignal(false)
   const [modHeld, setModHeld] = createSignal(false)
+  const [activePreset, setActivePreset] = createSignal<number | null>(initialCurve ? null : 5)
 
   let svgRef: SVGSVGElement | undefined
   let copyResetTimer: number | undefined
@@ -709,6 +929,7 @@ function App() {
   const selectedSegment = createMemo(() => editorState().selectedSegment)
   const canUndo = createMemo(() => past().length > 0)
   const canRedo = createMemo(() => future().length > 0)
+  const canDelete = createMemo(() => curve().segments.length > 1)
   const exactPath = createMemo(() => buildCurvePath(curve()))
   const selectedPath = createMemo(() => buildSegmentPath(curve(), selectedSegment()))
   const segmentPaths = createMemo(() =>
@@ -761,6 +982,11 @@ function App() {
     getPreviewStyle(previewMode(), previewAppliedValue()),
   )
 
+  createEffect(() => {
+    const hash = curveToHash(curve())
+    window.history.replaceState(null, '', `#${hash}`)
+  })
+
   const selectSegment = (index: number) => {
     setEditorWithoutHistory({
       curve: curve(),
@@ -779,6 +1005,7 @@ function App() {
     setPast((currentPast) => [...currentPast, cloneEditorState(current)])
     setEditorState(normalizedNext)
     setFuture([])
+    setActivePreset(null)
   }
 
   const setEditorWithoutHistory = (nextState: EditorState) => {
@@ -797,6 +1024,7 @@ function App() {
     setEditorState(cloneEditorState(previous))
     setDragTarget(null)
     setDragOrigin(null)
+    setActivePreset(findMatchingPreset(previous.curve))
   }
 
   const redo = () => {
@@ -811,6 +1039,7 @@ function App() {
     setEditorState(cloneEditorState(next))
     setDragTarget(null)
     setDragOrigin(null)
+    setActivePreset(findMatchingPreset(next.curve))
   }
 
   createHotkeys(
@@ -835,6 +1064,11 @@ function App() {
           event.preventDefault()
           void copyCss()
         },
+      },
+      {
+        hotkey: 'Backspace',
+        callback: () => deleteSegment(),
+        options: { enabled: canDelete(), preventDefault: true },
       },
     ],
     () => ({ enabled: !dragTarget() }),
@@ -878,6 +1112,7 @@ function App() {
       if (origin && !editorStatesEqual(origin, editorState())) {
         setPast((currentPast) => [...currentPast, cloneEditorState(origin)])
         setFuture([])
+        setActivePreset(null)
       }
 
       setDragOrigin(null)
@@ -912,8 +1147,9 @@ function App() {
     })
   })
 
-  const applyPreset = (presetCurve: Curve) => {
+  const applyPreset = (presetCurve: Curve, presetIndex: number) => {
     commitEditorState({ curve: cloneCurve(presetCurve), selectedSegment: 0 })
+    setActivePreset(presetIndex)
   }
 
   const startDrag = (target: DragTarget, event: PointerEvent) => {
@@ -1043,10 +1279,10 @@ function App() {
             <span>Presets</span>
             <div class="chip-group">
               <For each={PRESETS}>
-                {(preset) => (
+                {(preset, index) => (
                   <button
-                    class="chip-button"
-                    onClick={() => applyPreset(preset.curve)}
+                    class={`chip-button ${activePreset() === index() ? 'is-active' : ''}`}
+                    onClick={() => applyPreset(preset.curve, index())}
                     type="button"
                   >
                     {preset.label}
@@ -1082,11 +1318,11 @@ function App() {
               </button>
               <button
                 class="secondary-button"
-                disabled={curve().segments.length === 1}
+                disabled={!canDelete()}
                 onClick={deleteSegment}
                 type="button"
               >
-                Remove selected
+                Remove selected <span class="button-shortcut">{DELETE_HOTKEY_LABEL}</span>
               </button>
             </div>
           </div>
