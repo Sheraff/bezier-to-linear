@@ -95,6 +95,61 @@
   letter-spacing: 0.16em;
 }
 
+.preset-row > span {
+  width: 100%;
+}
+
+.preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+}
+
+.preset-icon {
+  width: 32px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.preset-icon path {
+  fill: none;
+  stroke: rgba(200, 210, 240, 0.5);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.preset-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  line-height: 1.2;
+}
+
+.preset-brand {
+  font-size: 0.65rem;
+  color: rgba(200, 210, 240, 0.4);
+  letter-spacing: 0.04em;
+}
+
+.preset-chip.is-active .preset-brand {
+  color: rgba(125, 211, 252, 0.6);
+}
+
+.preset-chip:hover .preset-brand {
+  color: rgba(125, 211, 252, 0.5);
+}
+
+.preset-chip.is-active .preset-icon path {
+  stroke: rgba(125, 211, 252, 0.9);
+}
+
+.preset-chip:hover .preset-icon path {
+  stroke: rgba(125, 211, 252, 0.7);
+}
+
 .segment-group {
   flex: 1;
 }

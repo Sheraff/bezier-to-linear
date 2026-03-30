@@ -53,9 +53,20 @@ const PREVIEW_HOLD = 1000
 
 const point = (x: number, y: number): Point => ({ x, y })
 
-const PRESETS: Array<{ label: string; curve: Curve }> = [
+type PresetCategory = 'standard' | 'switches' | 'devices'
+
+const PRESET_CATEGORY_LABELS: Record<PresetCategory, string> = {
+  standard: 'Standard',
+  switches: 'Keyboard switches',
+  devices: 'Mechanical devices',
+}
+
+const PRESET_CATEGORIES: PresetCategory[] = ['standard', 'switches', 'devices']
+
+const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; brand?: string }> = [
   {
     label: 'Ease in',
+    category: 'standard',
     curve: {
       anchors: [point(0, 0), point(1, 1)],
       segments: [{ cp1: point(0.5, 0), cp2: point(0.75, 0) }],
@@ -63,6 +74,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Ease out',
+    category: 'standard',
     curve: {
       anchors: [point(0, 0), point(1, 1)],
       segments: [{ cp1: point(0.25, 1), cp2: point(0.5, 1) }],
@@ -70,6 +82,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Ease in-out',
+    category: 'standard',
     curve: {
       anchors: [point(0, 0), point(1, 1)],
       segments: [{ cp1: point(0.44, 0), cp2: point(0.56, 1) }],
@@ -77,6 +90,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Overshoot',
+    category: 'standard',
     curve: {
       anchors: [point(0, 0), point(0.48, 1.28), point(1, 1)],
       segments: [
@@ -87,6 +101,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Bounce',
+    category: 'standard',
     curve: {
       anchors: [
         point(0, 0), point(0.35, 1), point(0.6517, 1),
@@ -102,6 +117,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Spring',
+    category: 'standard',
     curve: {
       anchors: [
         point(0, 0), point(0.079, 1.689), point(0.161, 0.5287),
@@ -130,6 +146,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Click',
+    category: 'standard',
     curve: {
       anchors: [
         point(0, 0), point(0.5996, 0.7013), point(0.792, 0.7988),
@@ -145,6 +162,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'MX Brown',
+    category: 'switches',
+    brand: 'Cherry',
     curve: {
       anchors: [
         point(0, 0), point(0.0136, 0.1112), point(0.0346, 0.2222),
@@ -167,6 +186,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'MX Blue',
+    category: 'switches',
+    brand: 'Cherry',
     curve: {
       anchors: [
         point(0, 0), point(0.0128, 0.1112), point(0.0372, 0.2222),
@@ -189,6 +210,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Box Jade',
+    category: 'switches',
+    brand: 'Kailh',
     curve: {
       anchors: [
         point(0, 0), point(0.0072, 0.1112), point(0.0212, 0.2222),
@@ -211,6 +234,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Holy Panda',
+    category: 'switches',
+    brand: 'Drop',
     curve: {
       anchors: [
         point(0, 0), point(0.0104, 0.1112), point(0.0353, 0.2222),
@@ -233,6 +258,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Topre',
+    category: 'switches',
+    brand: 'Topre',
     curve: {
       anchors: [
         point(0, 0), point(0.0178, 0.1112), point(0.486, 0.2222),
@@ -255,6 +282,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Buckling Spring',
+    category: 'switches',
+    brand: 'IBM',
     curve: {
       anchors: [
         point(0, 0), point(0.0103, 0.1112), point(0.0288, 0.2222),
@@ -277,6 +306,8 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Alps Orange',
+    category: 'switches',
+    brand: 'Alps',
     curve: {
       anchors: [
         point(0, 0), point(0.0071, 0.1112), point(0.0214, 0.2222),
@@ -299,6 +330,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Toggle Switch',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.0047, 0.1112), point(0.0094, 0.2222),
@@ -321,6 +353,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Bow Release',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.48, -0.18), point(0.58, -0.18),
@@ -339,6 +372,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Pen Click',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.3, 0.35), point(0.38, 0.92),
@@ -357,6 +391,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Ratchet',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.0064, 0.0477), point(0.0238, 0.0952),
@@ -395,6 +430,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Stapler',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.0078, 0.1112), point(0.0188, 0.2222),
@@ -417,6 +453,7 @@ const PRESETS: Array<{ label: string; curve: Curve }> = [
   },
   {
     label: 'Magnetic Latch',
+    category: 'devices',
     curve: {
       anchors: [
         point(0, 0), point(0.1831, 0.1112), point(0.351, 0.2222),
@@ -582,6 +619,21 @@ const buildLinePath = (points: Point[]) =>
       `${path}${index === 0 ? 'M' : ' L'} ${xToSvg(current.x)} ${yToSvg(current.y)}`,
     '',
   )
+
+const buildMiniCurvePath = (curve: Curve, width: number, height: number) => {
+  const pad = 2
+  const w = width - pad * 2
+  const h = height - pad * 2
+  const toX = (x: number) => pad + x * w
+  const toY = (y: number) => pad + (1 - clamp(y, -0.3, 1.3)) / 1.6 * h
+  const [first] = curve.anchors
+
+  return curve.segments.reduce(
+    (path, segment, index) =>
+      `${path} C ${toX(segment.cp1.x)} ${toY(segment.cp1.y)}, ${toX(segment.cp2.x)} ${toY(segment.cp2.y)}, ${toX(curve.anchors[index + 1].x)} ${toY(curve.anchors[index + 1].y)}`,
+    `M ${toX(first.x)} ${toY(first.y)}`,
+  )
+}
 
 const normalizeCurve = (curve: Curve): Curve => {
   const nextCurve = cloneCurve(curve)
@@ -1095,7 +1147,7 @@ function App() {
   const [future, setFuture] = createSignal<EditorState[]>([])
   const [stopCount, setStopCount] = createSignal(24)
   const [samplingMode, setSamplingMode] = createSignal<SamplingMode>('smart')
-  const [duration, setDuration] = createSignal(1100)
+  const [duration, setDuration] = createSignal(650)
   const [previewMode, setPreviewMode] = createSignal<PreviewMode>('move-x')
   const [copyLabel, setCopyLabel] = createSignal('Copy CSS')
   const [clock, setClock] = createSignal(0)
@@ -1459,22 +1511,34 @@ function App() {
             </div>
           </div>
 
-          <div class="control-row preset-row">
-            <span>Presets</span>
-            <div class="chip-group">
-              <For each={PRESETS}>
-                {(preset, index) => (
-                  <button
-                    class={`chip-button ${activePreset() === index() ? 'is-active' : ''}`}
-                    onClick={() => applyPreset(preset.curve, index())}
-                    type="button"
-                  >
-                    {preset.label}
-                  </button>
-                )}
-              </For>
-            </div>
-          </div>
+          <For each={PRESET_CATEGORIES}>
+            {(category) => (
+              <div class="control-row preset-row">
+                <span>{PRESET_CATEGORY_LABELS[category]}</span>
+                <div class="chip-group">
+                  <For each={PRESETS}>
+                    {(preset, index) =>
+                      preset.category === category ? (
+                        <button
+                          class={`chip-button preset-chip ${activePreset() === index() ? 'is-active' : ''}`}
+                          onClick={() => applyPreset(preset.curve, index())}
+                          type="button"
+                        >
+                          <svg class="preset-icon" viewBox="0 0 32 24">
+                            <path d={buildMiniCurvePath(preset.curve, 32, 24)} />
+                          </svg>
+                          <span class="preset-label">
+                            {preset.label}
+                            {preset.brand && <span class="preset-brand">{preset.brand}</span>}
+                          </span>
+                        </button>
+                      ) : null
+                    }
+                  </For>
+                </div>
+              </div>
+            )}
+          </For>
 
           <div class="control-row">
             <span>Segments</span>
