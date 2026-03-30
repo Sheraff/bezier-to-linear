@@ -82,6 +82,22 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     },
   },
   {
+    label: 'Exponential ease-in',
+    category: 'standard',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.25, 0.1015), point(0.5, 0.2689),
+        point(0.75, 0.5449), point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0833, 0.0261), cp2: point(0.1667, 0.0585) },
+        { cp1: point(0.3333, 0.1445), cp2: point(0.4167, 0.198) },
+        { cp1: point(0.5833, 0.3399), cp2: point(0.6667, 0.428) },
+        { cp1: point(0.8333, 0.6619), cp2: point(0.9167, 0.8072) },
+      ],
+    },
+  },
+  {
     label: 'Ease out',
     category: 'standard',
     curve: {
@@ -90,11 +106,48 @@ const PRESETS: Array<{ label: string; curve: Curve; category: PresetCategory; br
     },
   },
   {
+    label: 'Exponential ease-out',
+    category: 'standard',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.25, 0.4551), point(0.5, 0.7311),
+        point(0.75, 0.8985), point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0833, 0.1928), cp2: point(0.1667, 0.3381) },
+        { cp1: point(0.3333, 0.572), cp2: point(0.4167, 0.6601) },
+        { cp1: point(0.5833, 0.802), cp2: point(0.6667, 0.8555) },
+        { cp1: point(0.8333, 0.9415), cp2: point(0.9167, 0.9739) },
+      ],
+    },
+  },
+  {
     label: 'Ease in-out',
     category: 'standard',
     curve: {
       anchors: [point(0, 0), point(1, 1)],
       segments: [{ cp1: point(0.44, 0), cp2: point(0.56, 1) }],
+    },
+  },
+  {
+    label: 'Exponential ease-in-out',
+    category: 'standard',
+    curve: {
+      anchors: [
+        point(0, 0), point(0.125, 0.0508), point(0.25, 0.1345), point(0.375, 0.2725),
+        point(0.5, 0.5), point(0.625, 0.7275), point(0.75, 0.8655), point(0.875, 0.9492),
+        point(1, 1),
+      ],
+      segments: [
+        { cp1: point(0.0417, 0.013), cp2: point(0.0833, 0.0293) },
+        { cp1: point(0.1667, 0.0723), cp2: point(0.2083, 0.099) },
+        { cp1: point(0.2917, 0.1699), cp2: point(0.3333, 0.214) },
+        { cp1: point(0.4167, 0.3309), cp2: point(0.4583, 0.4036) },
+        { cp1: point(0.5417, 0.5964), cp2: point(0.5833, 0.6691) },
+        { cp1: point(0.6667, 0.786), cp2: point(0.7083, 0.8301) },
+        { cp1: point(0.7917, 0.901), cp2: point(0.8333, 0.9277) },
+        { cp1: point(0.9167, 0.9707), cp2: point(0.9583, 0.987) },
+      ],
     },
   },
   {
