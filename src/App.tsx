@@ -1726,7 +1726,7 @@ function App() {
 
   const [editorState, setEditorState] = createSignal<EditorState>(
     normalizeEditorState({
-      curve: initialCurve ? initialCurve : cloneCurve(PRESETS[5].curve),
+      curve: initialCurve ? initialCurve : cloneCurve(PRESETS[0].curve),
       selectedSegment: 0,
     }),
   )
@@ -1742,7 +1742,7 @@ function App() {
   const [dragOrigin, setDragOrigin] = createSignal<EditorState | null>(null)
   const [shiftHeld, setShiftHeld] = createSignal(false)
   const [modHeld, setModHeld] = createSignal(false)
-  const [activePreset, setActivePreset] = createSignal<number | null>(initialCurve ? null : 5)
+  const [activePreset, setActivePreset] = createSignal<number | null>(initialCurve ? null : 0)
   const [presetCategory, setPresetCategory] = createSignal<PresetCategory>('standard')
   const filteredPresets = createMemo(() =>
     PRESETS.map((preset, index) => ({ preset, index }))
